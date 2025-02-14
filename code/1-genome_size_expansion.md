@@ -71,17 +71,7 @@ raxmlHPC-PTHREADS-AVX -m PROTGAMMALG -T 20 -z RAxML_bootstrap.rhodo \
 ```R
 library(ape)
 library(phytools)
-library(picante)
-library(diversitree)
-library(corHMM)
-library(qgraph)   
 library(geiger)
-library(coda)
-library(plotrix)
-library(RColorBrewer)
-library(ggsci)
-library(scales)
-library(ggtree)
 library(dplyr)
 
 ## 1. Load tree

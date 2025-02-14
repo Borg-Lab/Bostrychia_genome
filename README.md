@@ -4,7 +4,7 @@
 
 ### 1. Red algal evolution involved at least three independent genome size expansion events
 
-[1-genome_size_expansion](https://github.com/Borg-Lab/Bostrychia_genome/tree/main/code/1-genome_size_expansion.md)
+[Red algal phylogeny and ancestral state reconstruction of genome sizes](https://github.com/Borg-Lab/Bostrychia_genome/tree/main/code/1-genome_size_expansion.md)
 
 ### 2. Chromosome-level assembly of the Bostrychia moritziana genome
 Renaming annotation 

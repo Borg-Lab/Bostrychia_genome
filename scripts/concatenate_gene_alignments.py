@@ -1,36 +1,61 @@
-from Bio import SeqIO
+#!/usr/bin/env python3
+
 import sys
-import os
+from Bio import AlignIO
+from collections import defaultdict
 
-# Get input directory from command-line arguments
-input_dir = sys.argv[1]
+def justSpeciesNames(fasta):
+    outputfile = fasta.split(".")[0] + "_speciesNames.fa"
+    aln = AlignIO.read(fasta, "fasta")
+    with open(outputfile, "w") as newFile:
+        for sequence in aln:
+            full_name = sequence.description.split("[", 1)[-1].split("]")[0]
+            newFile.write(f">{full_name}\n{sequence.seq}\n")
 
-# List all files in the input directory
-all_files = os.listdir(input_dir)
-
-# Extract unique species names by removing file extensions
-all_species = set()
-for filename in all_files:
-    species_name = filename.split('.')[0]  # Assuming format: species.fasta
-    all_species.add(species_name)
-
-# Dictionary to store alignment records per species
-alignment_records = {species: {} for species in all_species}
-
-# Read each FASTA file and store sequences by gene
-for filename in all_files:
-    species_name = filename.split('.')[0]
-    file_path = os.path.join(input_dir, filename)
+def modifyAlignment(*fastas):
+    species_set = set()
+    sequences = defaultdict(dict)
+    lengths = {}
     
-    # Parse the FASTA file
-    for record in SeqIO.parse(file_path, "fasta"):
-        gene_name = record.id.split('_')[0]  # Extract gene identifier
-        
-        # Store sequence record under the corresponding species and gene
-        if gene_name not in alignment_records[species_name]:
-            alignment_records[species_name][gene_name] = []
-        alignment_records[species_name][gene_name].append(record)
+    for fasta in fastas:
+        spec_aln = fasta.split(".")[0] + "_speciesNames.fa"
+        with open(spec_aln, "r") as f:
+            lines = f.read().split("\n")
+            for i in range(0, len(lines) - 1, 2):
+                species, sequence = lines[i][1:], lines[i + 1]
+                species_set.add(species)
+                sequences[fasta][species] = sequence
+                lengths[fasta] = len(sequence)
+    
+    for fasta in fastas:
+        output_file = fasta.split(".")[0] + "_allSpecies.fa"
+        with open(output_file, "w") as newFile:
+            for species in species_set:
+                newFile.write(f">{species}\n")
+                seq = sequences[fasta].get(species, "?" * lengths[fasta])
+                newFile.write(f"{seq}\n")
 
-# Print collected data summary
-for species, genes in alignment_records.items():
-    print(f"Species: {species}, Total genes: {len(genes)}")
+def concatAlignment(*fastas):
+    spec_files = [f.split(".")[0] + "_allSpecies.fa" for f in fastas]
+    concatenated = {}
+    
+    for spec_file in spec_files:
+        with open(spec_file, "r") as f:
+            lines = f.read().split("\n")
+            for i in range(0, len(lines) - 1, 2):
+                species, sequence = lines[i][1:], lines[i + 1]
+                concatenated.setdefault(species, []).append(sequence)
+    
+    with open("concatenated_gene_alignments.fasta", "w") as outFile:
+        for species, seq_list in concatenated.items():
+            outFile.write(f">{species}\n{''.join(seq_list)}\n")
+
+def main():
+    fastas = sys.argv[1:]
+    for fasta in fastas:
+        justSpeciesNames(fasta)
+    modifyAlignment(*fastas)
+    concatAlignment(*fastas)
+
+if __name__ == "__main__":
+    main()

@@ -124,7 +124,7 @@ We standardized chromosome nomenclature of both assemblies using a uniform forma
 ## 2. Genome annotation
 Prior to annotating protein-coding genes in the Bostrychia genome, each assembly was initially soft-masked for repetitive regions and TEs.
 Gene prediction was performed using RNA-seq data alone (BRAKER1) and using both RNA-seq data and a published manually curated orthologous set of red algal protein sequences (BRAKER3).
-Since all steps were performed similar in both the male and female, I will just show the code of annotating the male assembly here.
+Since all steps were performed similar in both the male and female, I will just show the code of annotating the male genes here.
 
 ### 2.1 Preparing orthologous set of red algal protein sequences
 ```bash
@@ -206,3 +206,39 @@ echo "done"
 ```
 
 ### 2.3 Combining annotations using TSEBRA
+Integrate both rounds of gene prediction.
+```bash
+singularity exec braker3.sif tsebra.py -g braker_prot_rnaseq.gtf,braker_rnaseq.gtf \
+-c default.cfg -e hintsfile_prot_rnaseq.gff,hintsfile_rnaseq.gff -o braker_combined_Male.gtf
+```
+Using script from [Tsebra](https://github.com/Gaius-Augustus/TSEBRA) to rename merged gtf. 
+```bash
+rename_gtf.py --gtf braker_combined_Male.gtf --out braker_combined_Male_renamed.gtf
+```
+Using custom script [rename_gtf.py](https://github.com/Borg-Lab/Bostrychia_genome/tree/main/scripts/rename_gtf.py) to standardize gene IDs to follow a systematic naming convention. The format is structured as Bm01g000010.t1, where Bm refers to the species (Bostrychia moritziana) 01 indicates the chromosome number, g denotes "gene", 000010 represents the unique gene identifier, and .t1 specifies the transcript number.
+Afterwards, I am using a script from [Augustus](https://github.com/Gaius-Augustus/Augustus) to get cds and protein fasta out of the gtf file.
+```bash
+getAnnoFastaFromJoingenes.py -g Bm3235_M_assembly_v3_masked.fa -o braker_Bm3235_M_assembly_v3_combined -f braker_combined_Male_renamed.gtf
+```
+To simplify downstream analyses, only the longest transcript isoform was used. I used a script from [Genome-Zoo](https://github.com/Rensing-Lab/Genome-Zoo) to filter.
+
+```bash
+split_isoform_dot.py -o . -i braker_Bm3235_M_assembly_v3_combined.aa -c "" -p "."
+```
+The gene set was additionally filtered to exclude TE-related genes, which were defined as sequences that were 100% soft-masked by the repeat annotation. 
+
+Get masked percentage of genes:
+```bash
+#!/bin/bash
+
+file_path="braker_Bm3235_M_assembly_v3_combined.codingseq"  
+output_file="percentage_repeats.txt" 
+
+awk '/^>/ {if (seq) {print header, seq; seq="";} header=$0; next;} {seq = seq $0;} END {print header, seq;}' "$file_path" |
+while read -r header sequence; do
+    total_length=${#sequence}
+    lower_count=$(echo "$sequence" | tr -cd 'a-z' | wc -c)
+    lower_percentage=$(awk "BEGIN {printf \"%.2f\", ($lower_count / $total_length) * 100}")
+    echo -e "$header\t$lower_percentage%" >> "$output_file"
+done
+```

@@ -68,6 +68,7 @@ raxmlHPC-PTHREADS-AVX -m PROTGAMMALG -T 20 -z RAxML_bootstrap.rhodo \
 ```
 
 ## 2. Perform ancestral state reconstruction of genome size estimates
+Using genome size estimates of Kapraun & Freshwater (2012) as continuous trait. 
 ```R
 library(ape)
 library(phytools)

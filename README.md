@@ -10,6 +10,7 @@
 
 [Basecalling of Nanopore reads and preparation of PacBio HiFi reads](https://github.com/Borg-Lab/Bostrychia_genome/tree/main/code/2-Basecalling_and_sequence_reads_modifications.md)
 
+[Genome assembly and annotation of Bostrychia](https://github.com/Borg-Lab/Bostrychia_genome/tree/main/code/3-Genome_assembly_and_annotation.md)
 Renaming annotation 
 
 Filter TE genes and rename gtf

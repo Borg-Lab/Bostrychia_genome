@@ -12,16 +12,15 @@
 
 [Genome assembly and annotation of Bostrychia](https://github.com/Borg-Lab/Bostrychia_genome/tree/main/code/3-Genome_assembly_and_annotation.md)
 
-### 3. Ancestral bursts in transposon proliferation underlie genome expansion in Bostrychia
 
-### 4. Ancestral bursts in transposon proliferation underlie genome expansion in Bostrychia
+### 3. Ancestral bursts in transposon proliferation underlie genome expansion in Bostrychia
 Build a TE landscape
 
 Overlap analysis
 
 Ancestral state reconstruction of EnSpm elements
 
-### 5. Gene-rich UV sex chromosomes harbor orthologs of ancient life cycle regulators
+### 4. Gene-rich UV sex chromosomes harbor orthologs of ancient life cycle regulators
 Reciprocal best hit analysis
 
 Sex chromosome mapping script

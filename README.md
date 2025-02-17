@@ -14,11 +14,8 @@
 
 
 ### 3. Ancestral bursts in transposon proliferation underlie genome expansion in Bostrychia
-Build a TE landscape
 
-Overlap analysis
-
-Ancestral state reconstruction of EnSpm elements
+[Repeat annotation and analysis](https://github.com/Borg-Lab/Bostrychia_genome/tree/main/code/4-Repeat_annotation_and_analysis.md)
 
 ### 4. Gene-rich UV sex chromosomes harbor orthologs of ancient life cycle regulators
 Reciprocal best hit analysis

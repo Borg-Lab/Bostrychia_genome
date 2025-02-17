@@ -65,3 +65,64 @@ To visualize the final TE complement in _Bostrychia_, a landscape of TE divergen
 The code how to plot the landscape can be found [here](https://github.com/Borg-Lab/Bostrychia_genome/tree/main/scripts/TE_landscape.R)
 
 ## 4. Overlap-based approach to detect _Plavaka_ elements across red algae
+Since it was infeasible to assign _Plavaka_ elements through manual curation of the TE libraries across all investigated red algal genomes, an overlap-based approach was used as an alternative. Homologs of the Bostrychia PAG genes were first identified in each red algal TE library with tBLASTn (using the evalue 0.001 option). The PAG2 gene hits in each species were then used to determine whether the _Plavaka_ transposase and the other two PAG genes lied within a 15 kb flanking region (total region 30 kb) on the same consensus sequence, to ensure that only complete _Plavaka_ elements were recovered.
+
+To run the analysis, a fasta file containing the PAG2 genes, as well as a fasta file containing all PAG and transposase sequences of as many species as possible is needed. In addition, the genome assembly fasta file and the RepeatMasker output (.out file) file of the species to be analyzed is needed. 
+### Run the analysis
+During the run, the main script [Overlap_analysis_Plavaka_elements.sh](https://github.com/Borg-Lab/Bostrychia_genome/tree/main/scripts/Overlap_analysis_Plavaka_elements.sh) uses two additional scripts, [add_flanks.sh](https://github.com/Borg-Lab/Bostrychia_genome/tree/main/scripts/add_flanks.sh) and [process_ids.py](https://github.com/Borg-Lab/Bostrychia_genome/tree/main/scripts/process_ids.py). 
+```bash
+# Overlap_analysis_Plavaka_elements.sh genome_fasta RepeatMasker_out_file 5_letter_abbreviation_of_species_name
+Overlap_analysis_Plavaka_elements.sh \
+../PYRYE/GCA_009829735.1_ASM982973v1_genomic.fna.unmasked \
+../PYRYE/GCA_009829735.1_ASM982973v1_genomic.fna.unmasked.out \
+PYRYE
+```
+
+## 5. Ancestral state reconstruction of _EnSpm_ elements
+
+To perform the ancestral state reconstruction of _Plavaka_ elements, their presence was treated as a discrete trait. The appropriate model of trait evolution was assessed as described in [Red algal phylogeny and ancestral state reconstruction of genome sizes](https://github.com/Borg-Lab/Bostrychia_genome/blob/main/code/1-Genome_size_expansion.md), with the Early-burst model selected for analysis. 
+```
+## Required R packages 
+library(ape)
+library(phytools)
+library(corHMM)
+library(geiger)
+
+tree<- read.newick("red_algal_phylogeny.tre")
+
+x <- read.table("Plavaka.csv", sep=";", h=T, stringsAsFactors=F)
+x$Name
+rownames(x)<-x[,1]
+trait <- x[,2]
+names(trait) <- x$Name
+temp <- match.phylo.data(tree, trait)
+temp
+
+col_traits <- list(Plavaka=c("#ff7f00", "#984ea3","blue"))
+
+pdf(paste("AncState_recon_",names(x)[2], ".pdf", sep=""), width=6, height=8)
+best_model <- "ER"
+trait <- x[,2]
+names(trait) <- x$Name
+trait
+
+#trait
+temp <- match.phylo.data(tree, trait)
+test <- cbind(names(temp$data) , data.frame(temp$data)) 
+test
+rownames(test)<-NULL
+
+trait_best <- rayDISC(temp$phy,test,ntraits=1, model=best_model, node.states=c("marginal"), root.p="maddfitz")
+col_i <- col_traits [ which(names(col_traits) == colnames(x)[2]) ]
+plotRECON(ladderize(temp$phy, right=FALSE),trait_best$states, piecolors=unlist(col_i), pie.cex=0.65, cex=0.6, label.offset=0.015, title=paste(names(x)[2], "best =",best_model, sep=" "),width=6, height=7)
+tip_color<- unlist(col_i)
+tip_color
+names(tip_color)<- names(table(trait))
+trait_col <- temp$data
+for (l in 1:length(tip_color)){ 
+  trait_col [which(trait_col==names(tip_color)[l])]<- tip_color[l]
+}
+tiplabels(pch=20, col = trait_col, cex = 1.0, adj=0.5)
+add.simmap.legend(colors = c("#ff7f00","#984ea3"), x=-0.01, y=23,prompt = FALSE, leg=c("Not present","Present"))
+dev.off()
+```

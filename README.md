@@ -18,6 +18,5 @@
 [Repeat annotation and analysis](https://github.com/Borg-Lab/Bostrychia_genome/tree/main/code/4-Repeat_annotation_and_analysis.md)
 
 ### 4. Gene-rich UV sex chromosomes harbor orthologs of ancient life cycle regulators
-Reciprocal best hit analysis
 
-Sex chromosome mapping script
+[Sex chromosome analyses](https://github.com/Borg-Lab/Bostrychia_genome/tree/main/code/5-Sex_chromosome_analyses.md)

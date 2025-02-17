@@ -1,5 +1,9 @@
 # The expanded _Bostrychia moritziana_ genome unveils evolution in the most diverse and complex order of red algae
 
+Romy Petroll, John A. West, Michael Ogden, Owen McGinley, Rory J. Craig, Susana M. Coelho, Michael Borg
+
+
+doi: https://doi.org/10.1101/2025.02.11.637652 
 ## Documentation
 
 ### 1. Red algal evolution involved at least three independent genome size expansion events

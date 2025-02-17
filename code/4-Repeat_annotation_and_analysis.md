@@ -80,7 +80,7 @@ PYRYE
 
 ## 5. Ancestral state reconstruction of _EnSpm_ elements
 
-To perform the ancestral state reconstruction of _Plavaka_ elements, their presence was treated as a discrete trait. The appropriate model of trait evolution was assessed as described in [Red algal phylogeny and ancestral state reconstruction of genome sizes](https://github.com/Borg-Lab/Bostrychia_genome/blob/main/code/1-Genome_size_expansion.md), with the Early-burst model selected for analysis. 
+To perform the ancestral state reconstruction of _EnSpm_ elements, their presence was treated as a discrete trait. The appropriate model of trait evolution was assessed as described in [Red algal phylogeny and ancestral state reconstruction of genome sizes](https://github.com/Borg-Lab/Bostrychia_genome/blob/main/code/1-Genome_size_expansion.md), with the Early-burst model selected for analysis. 
 ```
 ## Required R packages 
 library(ape)

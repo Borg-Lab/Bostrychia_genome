@@ -1,4 +1,4 @@
-# Genome assembly and annotation of Bostrychia moritziana
+# Genome assembly and annotation of _Bostrychia moritziana_
 
 ## 1. Genome assembly 
 A draft hybrid assembly from ONT and PacBio HiFi reads was generated separately from the male

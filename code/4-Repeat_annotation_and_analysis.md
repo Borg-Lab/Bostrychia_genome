@@ -96,23 +96,18 @@ rownames(x)<-x[,1]
 trait <- x[,2]
 names(trait) <- x$Name
 temp <- match.phylo.data(tree, trait)
-temp
 
 col_traits <- list(Plavaka=c("#ff7f00", "#984ea3","blue"))
-
 pdf(paste("AncState_recon_",names(x)[2], ".pdf", sep=""), width=6, height=8)
 best_model <- "ER"
 trait <- x[,2]
 names(trait) <- x$Name
-trait
 
-#trait
 temp <- match.phylo.data(tree, trait)
-test <- cbind(names(temp$data) , data.frame(temp$data)) 
-test
-rownames(test)<-NULL
+data <- cbind(names(temp$data) , data.frame(temp$data)) 
+rownames(data)<-NULL
 
-trait_best <- rayDISC(temp$phy,test,ntraits=1, model=best_model, node.states=c("marginal"), root.p="maddfitz")
+trait_best <- rayDISC(temp$phy,data,ntraits=1, model=best_model, node.states=c("marginal"), root.p="maddfitz")
 col_i <- col_traits [ which(names(col_traits) == colnames(x)[2]) ]
 plotRECON(ladderize(temp$phy, right=FALSE),trait_best$states, piecolors=unlist(col_i), pie.cex=0.65, cex=0.6, label.offset=0.015, title=paste(names(x)[2], "best =",best_model, sep=" "),width=6, height=7)
 tip_color<- unlist(col_i)

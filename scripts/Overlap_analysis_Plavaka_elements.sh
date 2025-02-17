@@ -36,7 +36,7 @@ awk '$3 >= $2' elements_with_flanks_NEW.bed > "${PREFIX}_flanks_NEW_edit.bed"
 
 # Generating fasta based on bed file
 bedtools getfasta -fi "$FASTA" -bed "${PREFIX}_flanks_NEW_edit.bed" -name > "${PREFIX}_flanks_NEW_edit.fasta"
-blastx -query "${PREFIX}_flanks_NEW_edit.fasta" -db ../database/total_prots_redAlgae_CDHIT.fa -evalue 0.001 -outfmt "6 qseqid qstart qend sseqid sstart send pident slen qlen length mismatch gapopen evalue" > out_NEW
+blastx -query "${PREFIX}_flanks_NEW_edit.fasta" -db ../database/total_prots_redAlgae.fa -evalue 0.001 -outfmt "6 qseqid qstart qend sseqid sstart send pident slen qlen length mismatch gapopen evalue" > out_NEW
 awk '{print $1, $4}' out_NEW > out_NEW_filtered
 sort out_NEW_filtered | uniq > output_NEW.txt
 sed -i 's/ /\t/' output_NEW.txt
